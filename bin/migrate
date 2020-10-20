@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+import {
+  Users, UserMeta, Graphs, GraphMeta, ShareGraphs, CommentGraphs, Notifications,
+} from '../models';
+
+const models = {
+  Users,
+  UserMeta,
+  Graphs,
+  GraphMeta,
+  ShareGraphs,
+  CommentGraphs,
+  Notifications,
+};
+
+async function migrate() {
+  for (const i in models) {
+    console.log(`Migrate ${i}`);
+    await models[i].sync({ alter: true });
+    if (models[i].onMigrate) {
+      await models[i].onMigrate();
+    }
+  }
+  process.exit(0);
+}
+
+migrate();
